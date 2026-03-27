@@ -27,6 +27,14 @@ class Complaint extends Model
 {
     use HasFactory;
 
+    protected function casts(): array
+    {
+        return [
+            'due_date' => 'datetime',
+            'resolved_at' => 'datetime',
+        ];
+    }
+
     protected static function boot(): void
     {
         parent::boot();
@@ -49,6 +57,11 @@ class Complaint extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
+    public function assignedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -60,6 +73,11 @@ class Complaint extends Model
     }
 
     public function complaintComments(): HasMany
+    {
+        return $this->hasMany(ComplaintComment::class);
+    }
+
+    public function comments(): HasMany
     {
         return $this->hasMany(ComplaintComment::class);
     }
