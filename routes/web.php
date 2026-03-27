@@ -54,6 +54,8 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/dashboard', [AdminComplaintController::class, 'dashboard'])->name('dashboard');
+    Route::patch('/complaints/{complaint}/assign', [AdminComplaintController::class, 'assign'])->name('complaints.assign');
+    Route::patch('/complaints/{complaint}/status', [AdminComplaintController::class, 'updateStatus'])->name('complaints.update-status');
         Route::resource('/complaints', AdminComplaintController::class);
         Route::resource('/users', AdminUserController::class);
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
