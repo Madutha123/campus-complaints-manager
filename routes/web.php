@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\ComplaintController as AdminComplaintController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DepartmentController as AdminDepartmentController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -54,9 +56,13 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/dashboard', [AdminComplaintController::class, 'dashboard'])->name('dashboard');
-    Route::patch('/complaints/{complaint}/assign', [AdminComplaintController::class, 'assign'])->name('complaints.assign');
-    Route::patch('/complaints/{complaint}/status', [AdminComplaintController::class, 'updateStatus'])->name('complaints.update-status');
+        Route::patch('/complaints/{complaint}/assign', [AdminComplaintController::class, 'assign'])->name('complaints.assign');
+        Route::patch('/complaints/{complaint}/status', [AdminComplaintController::class, 'updateStatus'])->name('complaints.update-status');
         Route::resource('/complaints', AdminComplaintController::class);
+        Route::get('/departments', [AdminDepartmentController::class, 'index'])->name('departments.index');
+        Route::post('/departments', [AdminDepartmentController::class, 'store'])->name('departments.store');
+        Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+        Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
         Route::resource('/users', AdminUserController::class);
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
 });

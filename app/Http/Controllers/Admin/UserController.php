@@ -6,13 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(): Response
+    public function index(): View
     {
-        return response('Admin Users List');
+        $users = User::query()->latest()->paginate(15);
+
+        return view('admin.users.index', compact('users'));
     }
 
     public function create(): Response
