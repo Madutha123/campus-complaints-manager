@@ -1,34 +1,30 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="flex flex-1 overflow-hidden">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-gray-200 flex-shrink-0">
-        <nav class="p-4 space-y-1">
-            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.dashboard') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Dashboard
-            </a>
-            <a href="{{ Route::has('admin.complaints.index') ? route('admin.complaints.index') : '#' }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.complaints.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Complaints
-            </a>
-            <a href="{{ Route::has('admin.users.index') ? route('admin.users.index') : '#' }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.users.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Users
-            </a>
-            <a href="{{ Route::has('admin.departments.index') ? route('admin.departments.index') : '#' }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.departments.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Departments
-            </a>
-            <a href="{{ Route::has('admin.categories.index') ? route('admin.categories.index') : '#' }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.categories.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Categories
-            </a>
-            <a href="{{ Route::has('admin.reports.index') ? route('admin.reports.index') : '#' }}" class="block px-4 py-2 rounded-md text-sm font-medium transition {{ request()->routeIs('admin.reports.*') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                Reports
-            </a>
-        </nav>
-    </aside>
+@section('sidebar')
+<flux:sidebar.group :heading="__('Admin Portal')">
+    <flux:sidebar.item icon="layout-grid" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
+        Dashboard
+    </flux:sidebar.item>
+    <flux:sidebar.item icon="inbox-arrow-down" :href="Route::has('admin.complaints.index') ? route('admin.complaints.index') : '#'" :current="request()->routeIs('admin.complaints.*')" wire:navigate>
+        Complaints
+    </flux:sidebar.item>
+    <flux:sidebar.item icon="users" :href="Route::has('admin.users.index') ? route('admin.users.index') : '#'" :current="request()->routeIs('admin.users.*')" wire:navigate>
+        Users
+    </flux:sidebar.item>
+    <flux:sidebar.item icon="building-office-2" :href="Route::has('admin.departments.index') ? route('admin.departments.index') : '#'" :current="request()->routeIs('admin.departments.*')" wire:navigate>
+        Departments
+    </flux:sidebar.item>
+    <flux:sidebar.item icon="tag" :href="Route::has('admin.categories.index') ? route('admin.categories.index') : '#'" :current="request()->routeIs('admin.categories.*')" wire:navigate>
+        Categories
+    </flux:sidebar.item>
+    <flux:sidebar.item icon="chart-bar" :href="Route::has('admin.reports.index') ? route('admin.reports.index') : '#'" :current="request()->routeIs('admin.reports.*')" wire:navigate>
+        Reports
+    </flux:sidebar.item>
+</flux:sidebar.group>
+@endsection
 
-    <!-- Main Content -->
-    <div class="flex-1 overflow-y-auto p-8 bg-gray-50">
-        @yield('admin-content')
-    </div>
+@section('content')
+<div class="px-6 py-6 w-full mx-auto max-w-7xl">
+    @yield('admin-content')
 </div>
 @endsection

@@ -1,43 +1,46 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'CampusTrack') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @stack('styles')
+    @include('partials.head')
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-900 flex flex-col min-h-[100vh]">
-    <!-- Top Navbar -->
-    <header class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <!-- Brand -->
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-gray-900">CampusTrack</span>
-                </div>
+<body class="min-h-screen bg-white dark:bg-zinc-800">
+    <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+        <flux:sidebar.header>
+            <x-app-logo :sidebar="true" href="{{ route('home') }}" wire:navigate />
+            <flux:sidebar.collapse class="lg:hidden" />
+        </flux:sidebar.header>
 
-                <!-- User Nav -->
-                <div class="flex items-center space-x-4">
-                    @auth
-                        <span class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-sm font-semibold text-red-600 hover:text-red-800 transition">
-                                Logout
-                            </button>
-                        </form>
-                    @endauth
-                </div>
-            </div>
-        </div>
-    </header>
+        <flux:sidebar.nav>
+            @yield('sidebar')
+        </flux:sidebar.nav>
 
-    <!-- Content Area -->
-    <main class="flex-grow flex flex-col w-full">
+        <flux:spacer />
+
+        <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
+    </flux:sidebar>
+
+    <!-- Mobile User Menu -->
+    <flux:header class="lg:hidden">
+        <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+        <flux:spacer />
+        <flux:dropdown position="top" align="end">
+            <flux:profile :initials="auth()->user()->initials() ?? 'US'" icon-trailing="chevron-down" />
+            <flux:menu>
+                <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    @csrf
+                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full cursor-pointer">
+                        {{ __('Log out') }}
+                    </flux:menu.item>
+                </form>
+            </flux:menu>
+        </flux:dropdown>
+    </flux:header>
+
+    <flux:main class="flex-1 w-full bg-white dark:bg-zinc-800">
         @yield('content')
-    </main>
+    </flux:main>
 
+    @fluxScripts
     @stack('scripts')
 </body>
 </html>
