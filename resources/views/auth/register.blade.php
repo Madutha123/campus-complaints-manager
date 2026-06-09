@@ -11,6 +11,7 @@
     <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8" x-data="{ role: '{{ old('role', 'student') }}' }">
         <h1 class="text-2xl font-bold text-gray-900">Create Account</h1>
         <p class="mt-1 text-sm text-gray-600">Register as a student or staff member.</p>
+        
 
         @if ($errors->any())
             <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
@@ -116,6 +117,12 @@
                 Register
             </button>
         </form>
+        <p class="mt-5 text-sm text-gray-600">
+            Already have an account?
+            <a href="{{ route('login') }}" class="font-semibold text-gray-900 underline underline-offset-4 hover:text-black">
+                Sign in
+            </a>
+        </p>
     </div>
 </body>
 </html>

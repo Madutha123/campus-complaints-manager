@@ -55,6 +55,12 @@
                 Sign in
             </button>
         </form>
+        <p class="mt-5 text-sm text-gray-600">
+            Don’t have an account?
+            <a href="{{ route('register') }}" class="font-semibold text-gray-900 underline underline-offset-4 hover:text-black">
+                Register here
+            </a>
+        </p>
     </div>
 </body>
 </html>
