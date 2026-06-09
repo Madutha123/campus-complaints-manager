@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-<div class="px-6 py-6 w-full mx-auto max-w-7xl">
+<div class="px-4 sm:px-6 lg:px-8 py-6 w-full mx-auto max-w-7xl">
     @yield('admin-content')
 </div>
 @endsection

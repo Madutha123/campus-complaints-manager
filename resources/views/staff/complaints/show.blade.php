@@ -5,13 +5,15 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-zinc-200 dark:border-zinc-700/50 pb-6">
         <div>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('staff.complaints.index') }}" class="text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 flex items-center gap-1 mb-2">
-                    <flux:icon.arrow-left class="size-3" /> Back to assigned
+            <div class="flex items-center gap-3 mb-3">
+                <a href="{{ route('staff.complaints.index') }}" class="btn-ghost -ml-2 text-xs">
+                    <flux:icon.arrow-left class="size-3.5" />
+                    Back to assigned
                 </a>
             </div>
             <div class="flex items-center gap-3">
-                <span class="inline-flex items-center rounded-md bg-zinc-100 dark:bg-zinc-700/50 px-2.5 py-1 sm:text-xs font-semibold text-zinc-700 dark:text-zinc-300 ring-1 ring-inset ring-zinc-500/10">
+                <span class="inline-flex items-center rounded-lg bg-zinc-100 dark:bg-zinc-700/50 px-3 py-1.5 text-xs font-mono font-semibold text-zinc-700 dark:text-zinc-300 ring-1 ring-inset ring-zinc-500/10">
+                    <flux:icon.hashtag class="size-3 mr-1.5 text-zinc-400" />
                     {{ $complaint->ticket_no }}
                 </span>
                 <x-status-badge :status="$complaint->status" />
@@ -36,95 +38,120 @@
         <!-- Main Content -->
         <div class="xl:col-span-2 space-y-6">
             <!-- Details Grid -->
-            <div class="overflow-hidden rounded-2xl bg-white dark:bg-zinc-800 shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-700">
-                <div class="px-6 py-5 border-b border-zinc-100 dark:border-zinc-700/50">
-                    <h2 class="text-base font-semibold leading-7 text-zinc-900 dark:text-white">Complaint Information</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="section-heading">Complaint Information</h2>
                 </div>
-                <div class="px-6 py-6">
-                    <dl class="grid gap-x-4 gap-y-6 sm:grid-cols-2 text-sm">
-                        <div class="sm:col-span-1">
-                            <dt class="text-zinc-500 dark:text-zinc-400">Category</dt>
-                            <dd class="mt-1 font-medium text-zinc-900 dark:text-white">{{ $complaint->category?->name ?? '-' }}</dd>
+                <div class="card-body">
+                    <dl class="grid gap-x-6 gap-y-6 sm:grid-cols-2 text-sm">
+                        <div>
+                            <dt class="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                                <flux:icon.tag class="size-3.5" />
+                                Category
+                            </dt>
+                            <dd class="mt-1.5 font-medium text-zinc-900 dark:text-white">{{ $complaint->category?->name ?? '-' }}</dd>
                         </div>
-                        <div class="sm:col-span-1">
-                            <dt class="text-zinc-500 dark:text-zinc-400">Department</dt>
-                            <dd class="mt-1 font-medium text-zinc-900 dark:text-white">{{ $complaint->department?->name ?? '-' }}</dd>
+                        <div>
+                            <dt class="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                                <flux:icon.building-office-2 class="size-3.5" />
+                                Department
+                            </dt>
+                            <dd class="mt-1.5 font-medium text-zinc-900 dark:text-white">{{ $complaint->department?->name ?? '-' }}</dd>
                         </div>
                         <div class="sm:col-span-2">
-                            <dt class="text-zinc-500 dark:text-zinc-400">Location</dt>
-                            <dd class="mt-1 font-medium text-zinc-900 dark:text-white">{{ $complaint->location ?? '-' }}</dd>
+                            <dt class="text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+                                <flux:icon.map-pin class="size-3.5" />
+                                Location
+                            </dt>
+                            <dd class="mt-1.5 font-medium text-zinc-900 dark:text-white">{{ $complaint->location ?? '-' }}</dd>
                         </div>
                         <div class="sm:col-span-2 border-t border-zinc-100 dark:border-zinc-700/50 pt-6">
-                            <dt class="text-zinc-500 dark:text-zinc-400 font-medium">Description</dt>
-                            <dd class="mt-3 prose dark:prose-invert max-w-none text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed">{{ $complaint->description }}</dd>
+                            <dt class="text-zinc-500 dark:text-zinc-400 font-medium mb-3">Description</dt>
+                            <dd class="prose dark:prose-invert max-w-none text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-line leading-relaxed bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-5 ring-1 ring-zinc-200 dark:ring-zinc-700/50">{{ $complaint->description }}</dd>
                         </div>
                     </dl>
                 </div>
             </div>
-            
+
             <!-- Activity Logs -->
-            <div class="overflow-hidden rounded-2xl bg-white dark:bg-zinc-800 shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-700">
-                <div class="px-6 py-5 border-b border-zinc-100 dark:border-zinc-700/50">
-                    <h2 class="text-base font-semibold leading-7 text-zinc-900 dark:text-white">Activity Timeline</h2>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="section-heading">Activity Timeline</h2>
                 </div>
-                <div class="px-6 py-6 border-l-2 border-zinc-100 dark:border-zinc-700 ml-8 mt-2 space-y-8">
-                    @forelse ($complaint->activityLogs as $log)
-                        <div class="relative pl-6 -ml-[2px] transition hover:bg-zinc-50 dark:hover:bg-zinc-800 py-2 rounded-xl">
-                            <span class="absolute -left-[31px] top-1 h-[22px] w-[22px] bg-white dark:bg-zinc-800 rounded-full border-4 border-zinc-200 dark:border-zinc-600 shadow-sm"></span>
-                            <p class="text-sm font-semibold text-zinc-900 dark:text-white">{{ $log->action }}</p>
-                            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                                {{ optional($log->created_at)->format('F j, Y g:i A') }} &middot; by <span class="font-medium text-zinc-700 dark:text-zinc-300">{{ $log->user?->name ?? 'System' }}</span>
-                            </p>
-                            @if ($log->old_status || $log->new_status)
-                                <div class="mt-2 flex items-center gap-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                                    <span class="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-700">{{ $log->old_status ?? '-' }}</span>
-                                    <flux:icon.arrow-right class="size-3" />
-                                    <span class="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-700">{{ $log->new_status ?? '-' }}</span>
+                <div class="card-body">
+                    <div class="relative">
+                        <div class="absolute left-[11px] top-2 bottom-2 w-0.5 bg-zinc-200 dark:bg-zinc-700 rounded-full"></div>
+
+                        <div class="space-y-8">
+                            @forelse ($complaint->activityLogs as $log)
+                                @php
+                                    $actionColors = match (true) {
+                                        str_contains(strtolower($log->action ?? ''), 'resolve') || str_contains(strtolower($log->action ?? ''), 'close') => 'border-emerald-500 bg-emerald-100 dark:bg-emerald-500/20',
+                                        str_contains(strtolower($log->action ?? ''), 'reject') => 'border-red-500 bg-red-100 dark:bg-red-500/20',
+                                        str_contains(strtolower($log->action ?? ''), 'assign') => 'border-indigo-500 bg-indigo-100 dark:bg-indigo-500/20',
+                                        str_contains(strtolower($log->action ?? ''), 'reopen') => 'border-orange-500 bg-orange-100 dark:bg-orange-500/20',
+                                        default => 'border-zinc-400 bg-zinc-100 dark:bg-zinc-500/20',
+                                    };
+                                @endphp
+                                <div class="relative pl-10 group">
+                                    <div class="absolute left-0 top-1.5 w-[23px] h-[23px] rounded-full border-4 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                        <div class="w-2 h-2 rounded-full {{ explode(' ', $actionColors)[1] ?? 'bg-zinc-400' }}"></div>
+                                    </div>
+                                    <div class="transition hover:bg-zinc-50 dark:hover:bg-zinc-800/50 -mx-3 px-3 py-2 rounded-xl">
+                                        <p class="text-sm font-semibold text-zinc-900 dark:text-white">{{ $log->action }}</p>
+                                        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                                            {{ optional($log->created_at)->format('F j, Y g:i A') }} &middot; by <span class="font-medium text-zinc-700 dark:text-zinc-300">{{ $log->user?->name ?? 'System' }}</span>
+                                        </p>
+                                        @if ($log->note)
+                                            <div class="mt-3 text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-4 ring-1 ring-zinc-200 dark:ring-zinc-700/50 border-l-2 border-indigo-400/50">
+                                                {{ $log->note }}
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                            @endif
-                            @if ($log->note)
-                                <div class="mt-3 text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-3 ring-1 ring-zinc-200 dark:ring-zinc-700/50">
-                                    {{ $log->note }}
+                            @empty
+                                <div class="relative pl-10">
+                                    <div class="absolute left-0 top-1.5 w-[23px] h-[23px] rounded-full border-4 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800"></div>
+                                    <p class="text-sm text-zinc-500 dark:text-zinc-400 py-1">No activity logs.</p>
                                 </div>
-                            @endif
+                            @endforelse
                         </div>
-                    @empty
-                        <div class="pl-6 pb-2">
-                            <span class="absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full bg-zinc-200 dark:bg-zinc-700 ring-[4px] ring-white dark:ring-zinc-800"></span>
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400">No activity logs.</p>
-                        </div>
-                    @endforelse
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar Actions -->
+        <!-- Sidebar: Update Status -->
         <div class="space-y-6">
-            <!-- Status Form -->
-            <div class="rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm p-6 sticky top-6">
-                <h2 class="text-base font-semibold leading-7 text-zinc-900 dark:text-white">Update Status</h2>
-                <form method="POST" action="{{ route('staff.complaints.update-status', $complaint) }}" class="mt-4 space-y-4">
-                    @csrf
-                    @method('PATCH')
+            <div class="card sticky top-6">
+                <div class="card-header">
+                    <h2 class="section-heading">Update Status</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('staff.complaints.update-status', $complaint) }}" class="space-y-4">
+                        @csrf
+                        @method('PATCH')
 
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-zinc-900 dark:text-zinc-200 mb-1.5">New Status</label>
-                        <select id="status" name="status" class="block w-full rounded-lg border-0 py-2 pl-3 pr-8 text-zinc-900 dark:text-zinc-100 ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 bg-white dark:bg-zinc-900 sm:text-sm sm:leading-6" required>
-                            @foreach ($statusOptions as $statusOption)
-                                <option value="{{ $statusOption }}" @selected(old('status', $complaint->status) === $statusOption)>{{ ucfirst(str_replace('_', ' ', $statusOption)) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div>
+                            <label for="status" class="form-label">New Status</label>
+                            <select id="status" name="status" class="form-select" required>
+                                @foreach ($statusOptions as $statusOption)
+                                    <option value="{{ $statusOption }}" @selected(old('status', $complaint->status) === $statusOption)>{{ ucfirst(str_replace('_', ' ', $statusOption)) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div>
-                        <label for="note" class="block text-sm font-medium text-zinc-900 dark:text-zinc-200 mb-1.5">Resolution Notes</label>
-                        <textarea id="note" name="note" rows="4" placeholder="Detail the steps taken..." class="block w-full rounded-lg border-0 py-2.5 px-3 text-zinc-900 dark:text-zinc-100 ring-1 ring-inset ring-zinc-300 dark:ring-zinc-700 focus:ring-2 focus:ring-inset focus:ring-indigo-600 dark:focus:ring-indigo-500 bg-white dark:bg-zinc-900 shadow-sm sm:text-sm sm:leading-6">{{ old('note') }}</textarea>
-                    </div>
+                        <div>
+                            <label for="note" class="form-label">Resolution Notes</label>
+                            <textarea id="note" name="note" rows="4" placeholder="Detail the steps taken..." class="form-input min-h-[100px]">{{ old('note') }}</textarea>
+                        </div>
 
-                    <button type="submit" class="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition">
-                        Update Status
-                    </button>
-                </form>
+                        <button type="submit" class="btn-primary w-full">
+                            <flux:icon.arrow-up class="size-4" />
+                            Update Status
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

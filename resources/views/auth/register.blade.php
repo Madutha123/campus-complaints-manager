@@ -1,21 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8" x-data="{ role: '{{ old('role', 'student') }}' }">
-        <h1 class="text-2xl font-bold text-gray-900">Create Account</h1>
-        <p class="mt-1 text-sm text-gray-600">Register as a student or staff member.</p>
-        
+<x-layouts::auth :title="__('Register')">
+    <div class="flex flex-col gap-6" x-data="{ role: '{{ old('role', 'student') }}' }">
+        <div class="space-y-2">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Create an account</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Register as a student or staff member.</p>
+        </div>
 
         @if ($errors->any())
-            <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                <ul class="list-disc pl-5 space-y-1">
+            <div class="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4">
+                <ul class="list-disc pl-5 space-y-1 text-sm text-red-700 dark:text-red-400">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -23,106 +15,87 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ url('/register') }}" class="mt-6 grid gap-4">
+        <form method="POST" action="{{ url('/register') }}" class="flex flex-col gap-5">
             @csrf
 
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value="{{ old('name') }}"
+            <flux:input
+                name="name"
+                :label="__('Full name')"
+                :value="old('name')"
+                type="text"
+                required
+                autofocus
+                autocomplete="name"
+                placeholder="John Doe"
+            />
+
+            <flux:input
+                name="email"
+                :label="__('Email address')"
+                :value="old('email')"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="you@campus.edu"
+            />
+
+            <div class="grid gap-5 sm:grid-cols-2">
+                <flux:input
+                    name="password"
+                    :label="__('Password')"
+                    type="password"
                     required
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
+                    autocomplete="new-password"
+                    placeholder="Min. 8 characters"
+                    viewable
+                />
+
+                <flux:input
+                    name="password_confirmation"
+                    :label="__('Confirm password')"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    placeholder="Repeat password"
+                    viewable
+                />
             </div>
 
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value="{{ old('email') }}"
-                    required
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
-            </div>
-
-            <div class="grid gap-4 md:grid-cols-2">
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                    >
-                </div>
-
-                <div>
-                    <label for="password_confirm" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                    <input
-                        id="password_confirm"
-                        name="password_confirmation"
-                        type="password"
-                        required
-                        class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                    >
-                </div>
-            </div>
-
-            <div>
-                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                <select
-                    id="role"
-                    name="role"
-                    x-model="role"
-                    required
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
+                <flux:select name="role" :label="__('Role')" x-model="role" required>
                     <option value="student">Student</option>
                     <option value="staff">Staff</option>
-                </select>
+                </flux:select>
             </div>
 
             <div x-show="role === 'student'" x-cloak>
-                <label for="student_id" class="block text-sm font-medium text-gray-700">Student ID</label>
-                <input
-                    id="student_id"
+                <flux:input
                     name="student_id"
+                    :label="__('Student ID')"
+                    :value="old('student_id')"
                     type="text"
-                    value="{{ old('student_id') }}"
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
+                    placeholder="e.g. STU-2024-0001"
+                />
             </div>
 
             <div x-show="role === 'staff'" x-cloak>
-                <label for="employee_id" class="block text-sm font-medium text-gray-700">Employee ID</label>
-                <input
-                    id="employee_id"
+                <flux:input
                     name="employee_id"
+                    :label="__('Employee ID')"
+                    :value="old('employee_id')"
                     type="text"
-                    value="{{ old('employee_id') }}"
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
+                    placeholder="e.g. EMP-2024-0001"
+                />
             </div>
 
-            <button
-                type="submit"
-                class="mt-2 w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
-            >
-                Register
-            </button>
+            <flux:button variant="primary" type="submit" class="w-full">
+                {{ __('Create account') }}
+            </flux:button>
         </form>
-        <p class="mt-5 text-sm text-gray-600">
-            Already have an account?
-            <a href="{{ route('login') }}" class="font-semibold text-gray-900 underline underline-offset-4 hover:text-black">
-                Sign in
-            </a>
-        </p>
+
+        <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
+            <span>{{ __('Already have an account?') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('Sign in') }}</flux:link>
+        </div>
     </div>
-</body>
-</html>
+</x-layouts::auth>

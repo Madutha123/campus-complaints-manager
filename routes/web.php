@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\ComplaintController as AdminComplaintController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ComplaintController as AdminComplaintController;
 use App\Http\Controllers\Admin\DepartmentController as AdminDepartmentController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -65,6 +65,6 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
         Route::resource('/users', AdminUserController::class);
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
-});
+    });
 
 require __DIR__.'/settings.php';

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<div class="space-y-6">
+<div class="space-y-8">
     <div>
-        <h1 class="text-2xl font-bold text-gray-900">Departments</h1>
-        <p class="mt-1 text-sm text-gray-600">Create and manage complaint departments like IT, Facilities, and Academic.</p>
+        <h1 class="page-heading">Departments</h1>
+        <p class="page-subheading">Create and manage complaint departments like IT, Facilities, and Academic.</p>
     </div>
 
     @if (session('success'))
@@ -15,62 +15,93 @@
         <x-alert type="error" :message="$errors->first()" />
     @endif
 
-    <form method="POST" action="{{ route('admin.departments.store') }}" class="rounded-xl border border-gray-200 bg-white p-6 space-y-4">
+    <!-- Create Form -->
+    <form method="POST" action="{{ route('admin.departments.store') }}" class="card">
         @csrf
-        <h2 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Create Department</h2>
+        <div class="card-header">
+            <div class="flex items-center gap-2">
+                <flux:icon.plus-circle class="size-4 text-indigo-600 dark:text-indigo-400" />
+                <h2 class="section-heading">Create Department</h2>
+            </div>
+        </div>
+        <div class="card-body space-y-5">
+            <div class="grid gap-5 md:grid-cols-2">
+                <div>
+                    <label for="name" class="form-label">Name</label>
+                    <input id="name" name="name" type="text" value="{{ old('name') }}" required placeholder="e.g. Information Technology" class="form-input">
+                </div>
+                <div class="flex items-end pb-1">
+                    <label class="inline-flex items-center gap-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer select-none">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }} class="size-4 rounded border-zinc-300 dark:border-zinc-600 text-indigo-600 focus:ring-indigo-600 dark:bg-zinc-900 dark:focus:ring-indigo-500">
+                        Active
+                    </label>
+                </div>
+            </div>
 
-        <div class="grid gap-4 md:grid-cols-2">
             <div>
-                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                <input id="name" name="name" type="text" value="{{ old('name') }}" required class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Brief description of this department's role..." class="form-input min-h-[80px]">{{ old('description') }}</textarea>
             </div>
-            <div class="flex items-end">
-                <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700">
-                    <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }} class="rounded border border-gray-300 text-gray-900 focus:ring-gray-900">
-                    Active
-                </label>
+
+            <div class="pt-2">
+                <button type="submit" class="btn-primary">
+                    <flux:icon.plus class="size-4" />
+                    Create Department
+                </button>
             </div>
         </div>
-
-        <div>
-            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea id="description" name="description" rows="3" class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900">{{ old('description') }}</textarea>
-        </div>
-
-        <button type="submit" class="rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black">Create Department</button>
     </form>
 
-    <div class="rounded-xl border border-gray-200 bg-white overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Name</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Description</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                    <th class="px-4 py-3 text-left font-semibold text-gray-700">Created</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100 bg-white">
-                @forelse ($departments as $department)
+    <!-- Departments Table -->
+    <div class="table-wrapper">
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-left text-sm">
+                <thead class="table-header">
                     <tr>
-                        <td class="px-4 py-3 font-medium text-gray-800">{{ $department->name }}</td>
-                        <td class="px-4 py-3 text-gray-700">{{ $department->description ?: '-' }}</td>
-                        <td class="px-4 py-3">
-                            @if ($department->is_active)
-                                <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">Active</span>
-                            @else
-                                <span class="inline-flex rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">Inactive</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3 text-gray-600">{{ optional($department->created_at)->format('M d, Y') }}</td>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created</th>
                     </tr>
-                @empty
-                    <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">No departments found.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody class="table-body">
+                    @forelse ($departments as $department)
+                        <tr class="table-row table-row-accent">
+                            <td class="table-cell font-medium text-zinc-900 dark:text-zinc-200">{{ $department->name }}</td>
+                            <td class="table-cell text-zinc-600 dark:text-zinc-400 max-w-xs truncate">{{ $department->description ?: '-' }}</td>
+                            <td class="table-cell">
+                                @if ($department->is_active)
+                                    <span class="badge bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-400/10 dark:text-emerald-400 dark:ring-emerald-400/20">
+                                        <span class="badge-dot bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                @else
+                                    <span class="badge bg-zinc-50 text-zinc-700 ring-zinc-600/10 dark:bg-zinc-400/10 dark:text-zinc-400 dark:ring-zinc-400/20">
+                                        <span class="badge-dot bg-zinc-400"></span>
+                                        Inactive
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="table-cell text-zinc-500 dark:text-zinc-400">{{ optional($department->created_at)->format('M d, Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="table-cell text-center text-zinc-500 dark:text-zinc-400 py-16">No departments found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if(method_exists($departments, 'hasPages') && $departments->hasPages())
+            <div class="border-t border-zinc-200 dark:border-zinc-700 px-6 py-4 flex items-center justify-between text-sm">
+                <p class="text-zinc-500 dark:text-zinc-400">
+                    Showing {{ $departments->firstItem() }}–{{ $departments->lastItem() }} of {{ $departments->total() }}
+                </p>
+                <div class="pagination-links">
+                    {{ $departments->links() }}
+                </div>
+            </div>
+        @endif
     </div>
-
-    {{ $departments->links() }}
 </div>
 @endsection

@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        <h1 class="text-2xl font-bold text-gray-900">Sign In</h1>
-        <p class="mt-1 text-sm text-gray-600">Access your campus complaints account.</p>
+<x-layouts::auth :title="__('Log in')">
+    <div class="flex flex-col gap-6">
+        <div class="space-y-2">
+            <h1 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Welcome back</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Enter your credentials to access your account.</p>
+        </div>
 
         @if ($errors->any())
-            <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                <ul class="list-disc pl-5 space-y-1">
+            <div class="rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 p-4">
+                <ul class="list-disc pl-5 space-y-1 text-sm text-red-700 dark:text-red-400">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -21,46 +15,50 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ url('/login') }}" class="mt-6 space-y-4">
+        <form method="POST" action="{{ url('/login') }}" class="flex flex-col gap-5">
             @csrf
 
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value="{{ old('email') }}"
-                    required
-                    autofocus
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
-            </div>
+            <flux:input
+                name="email"
+                :label="__('Email address')"
+                :value="old('email')"
+                type="email"
+                required
+                autofocus
+                autocomplete="email"
+                placeholder="you@campus.edu"
+            />
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input
-                    id="password"
+            <div class="relative">
+                <flux:input
                     name="password"
+                    :label="__('Password')"
                     type="password"
                     required
-                    class="mt-1 w-full rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-gray-900"
-                >
+                    autocomplete="current-password"
+                    :placeholder="__('Enter your password')"
+                    viewable
+                />
+
+                @if (Route::has('password.request'))
+                    <flux:link class="absolute top-0 text-sm end-0" :href="route('password.request')" wire:navigate>
+                        {{ __('Forgot your password?') }}
+                    </flux:link>
+                @endif
             </div>
 
-            <button
-                type="submit"
-                class="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
-            >
-                Sign in
-            </button>
+            <flux:checkbox name="remember" :label="__('Remember me')" :checked="old('remember')" />
+
+            <flux:button variant="primary" type="submit" class="w-full" data-test="login-button">
+                {{ __('Log in') }}
+            </flux:button>
         </form>
-        <p class="mt-5 text-sm text-gray-600">
-            Don’t have an account?
-            <a href="{{ route('register') }}" class="font-semibold text-gray-900 underline underline-offset-4 hover:text-black">
-                Register here
-            </a>
-        </p>
+
+        @if (Route::has('register'))
+            <div class="space-x-1 text-sm text-center rtl:space-x-reverse text-zinc-600 dark:text-zinc-400">
+                <span>{{ __("Don't have an account?") }}</span>
+                <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
+            </div>
+        @endif
     </div>
-</body>
-</html>
+</x-layouts::auth>
